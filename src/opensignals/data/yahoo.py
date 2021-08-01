@@ -6,7 +6,7 @@ import requests
 import random
 
 from .common import download_data as download_data_generic
-from .common import  get_data as get_data_generic
+from .common import get_data as get_data_generic
 from dateutil.relativedelta import relativedelta, FR
 from opensignals import utils
 
@@ -29,7 +29,7 @@ def download_ticker(ticker, start_epoch, end_epoch):
         interval='1d',
         events='div,splits',
     )
-    while(tries > 0):
+    while tries > 0:
         tries -= 1
         try:
             data = requests.get(
@@ -82,7 +82,7 @@ def download_data(db_dir, recreate=False):
 
 def get_data(
         db_dir,
-        features_generators = [],
+        features_generators=[],
         last_friday=dt.datetime.today() - relativedelta(weekday=FR(-1)),
         target='target'
 ): return get_data_generic(

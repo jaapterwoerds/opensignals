@@ -9,7 +9,6 @@ from .common import download_data as download_data_generic
 from .common import get_data as get_data_generic
 from dateutil.relativedelta import relativedelta, FR
 
-
 FMP_API_KEY = os.environ.get('FMP_API_KEY')
 
 
@@ -59,9 +58,10 @@ def download_ticker(ticker, start_epoch, end_epoch):
 def download_data(db_dir, recreate=False):
     return download_data_generic(db_dir, download_ticker, recreate)
 
+
 def get_data(
         db_dir,
-        features_generators = [],
+        features_generators=[],
         last_friday=dt.datetime.today() - relativedelta(weekday=FR(-1)),
         target='target'
 ): return get_data_generic(
