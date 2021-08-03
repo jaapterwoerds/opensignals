@@ -14,6 +14,8 @@ SIGNALS_UNIVERSE=f'{AWS_BASE_URL}/latest_universe.csv'
 SIGNALS_TICKER_MAP=f'{AWS_BASE_URL}/signals_ticker_map_w_bbg.csv'
 SIGNALS_TARGETS=f'{AWS_BASE_URL}/signals_train_val_bbg.csv'
 
+START_DATE = '2002-12-01'
+
 
 def get_tickers():
     ticker_map = pd.read_csv(SIGNALS_TICKER_MAP)
@@ -65,7 +67,7 @@ def get_ticker_missing(
         eligible_tickers_available_data.date_max.isna(), ['bloomberg_ticker', 'yahoo']
     ]
 
-    ticker_not_found['start'] = '2002-12-01'
+    ticker_not_found['start'] = START_DATE
 
     last_friday_52 = last_friday - relativedelta(weeks=52)
     tickers_outdated = eligible_tickers_available_data.loc[
@@ -206,6 +208,7 @@ def download_data(db_dir, download_data_fn, recreate = False):
     for start_date, tickers in ticker_missing_grouped.iteritems():
         temp_df = download_tickers(download_data_fn, tickers.split(' '), start=start_date)
 
+        # Yahoo Finance returning previous day in some situations (e.g. Friday in TelAviv markets)
         # Yahoo Finance returning previous day in some situations (e.g. Friday in TelAviv markets)
         temp_df = temp_df[temp_df.date >= start_date]
         if temp_df.empty:

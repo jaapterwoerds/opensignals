@@ -69,3 +69,45 @@ def get_data(
     features_generators=features_generators,
     last_friday=last_friday,
     target=target)
+
+
+def download_analysts_grade_ticker(ticker, start_epoch, end_epoch):
+    def empty_df():
+        return pd.DataFrame(columns=[
+            "date", "bloomberg_ticker",
+            "grade", "grading_company", "provider"])
+
+    retries = 3
+    tries = retries + 1
+    backoff = 1
+    url = f'https://financialmodelingprep.com/api/v3/grade/{ticker}'
+    params = {
+        'limit': 10000,
+        'apikey': FMP_API_KEY
+    }
+
+    while tries > 0:
+        tries -= 1
+        try:
+            data = requests.get(
+                url=url,
+                params=params)
+            data_json = data.json()
+            df = pd.DataFrame(
+                data_json['historical'],
+                columns=['date', 'grade', 'grading_company']
+            )
+            df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
+            df['bloomberg_ticker'] = ticker
+            df['provider'] = 'fmp'
+            return ticker, df.drop_duplicates().dropna()
+
+        except Exception as e:
+            _time.sleep(backoff)
+            backoff = min(backoff * 2, 30)
+
+    return ticker, empty_df()
+
+
+def download_analyst_grade_data(db_dir, recreate=False):
+    return download_data_generic(db_dir, download_analysts_grade_ticker, recreate)
