@@ -1,4 +1,5 @@
 import datetime as dt
+import logging
 import numpy as np
 import pandas as pd
 import time as _time
@@ -8,6 +9,8 @@ import os
 from .common import download_data as download_data_generic
 from .common import get_data as get_data_generic
 from dateutil.relativedelta import relativedelta, FR
+
+logger = logging.getLogger(__name__)
 
 FMP_API_KEY = os.environ.get('FMP_API_KEY')
 
@@ -111,3 +114,20 @@ def download_analysts_grade_ticker(ticker, start_epoch, end_epoch):
 
 def download_analyst_grade_data(db_dir, recreate=False):
     return download_data_generic(db_dir, download_analysts_grade_ticker, recreate)
+
+
+def get_analyst_grade_data(db_dir):
+    grading_data = pd.DataFrame({
+        "date": pd.Series([], dtype='datetime64[ns]'),
+        "bloomberg_ticker": pd.Series([], dtype='str'),
+        "grade": pd.Series([], dtype='str'),
+        "grading_company": pd.Series([], dtype='str'),
+        "provider": pd.Series([], dtype='str'),
+    })
+    if len(list(db_dir.rglob('*.parquet'))) > 0:
+        grading_data = pd.read_parquet(db_dir)
+
+    logger.info(f'Retrieving data for {grading_data.bloomberg_ticker.unique().shape[0]} '
+                'tickers from the database')
+
+    return grading_data
