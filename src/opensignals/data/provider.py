@@ -23,7 +23,7 @@ SIGNALS_TARGETS = f'{AWS_BASE_URL}/signals_train_val_bbg.csv'
 
 class Provider(ABC):
     """Common base class for (daily) stock price data"""
-
+   
     @staticmethod
     def get_tickers() -> pd.DataFrame:
         ticker_map = pd.read_csv(SIGNALS_TICKER_MAP)
@@ -180,20 +180,19 @@ class Provider(ABC):
         start_date = dt.datetime.strptime(start, '%Y-%m-%d')
         end_date = dt.datetime.combine(dt.date.today(), dt.time())
 
-        pbar = tqdm(total=len(tickers), unit='tickers')
-
         dfs = {}
         with futures.ThreadPoolExecutor() as executor:
             _futures = []
-            for ticker in tickers:
-                _futures.append(
-                    executor.submit(self.download_ticker, ticker=ticker, start=start_date, end=end_date)
-                )
+            with tqdm(total=len(tickers), unit='tickers') as pbar:
+                for ticker in tickers:
+                    _futures.append(
+                        executor.submit(self.download_ticker, ticker=ticker, start=start_date, end=end_date)
+                    )
 
-            for future in futures.as_completed(_futures):
-                pbar.update(1)
-                ticker, data = future.result()
-                dfs[ticker] = data
+                for future in futures.as_completed(_futures):
+                    pbar.update(1)
+                    ticker, data = future.result()
+                    dfs[ticker] = data
 
         pbar.close()
 
