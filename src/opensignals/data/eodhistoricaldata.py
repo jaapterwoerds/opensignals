@@ -17,28 +17,17 @@ logger = logging.getLogger(__name__)
 logger.setLevel(level=logging.DEBUG)
 class EodHisotricalData(Provider):
     """Implementation of a stock data price provider that uses the eodhistoricaldata.com API  https://eodhistoricaldata.com/financial-apis/ """
-    def __init__(self, api_token) -> None:
+    def __init__(self, api_token, ticker_map:pd) -> None:
         super().__init__()
         self.api_token=api_token
     
     @staticmethod
     def get_tickers() -> pd.DataFrame:
-        ticker_map = pd.read_parquet('/Users/jaapterwoerds/workspaces/jaapterwoerds/opensignals/eodhd-map.parquet').reset_index()
+        ticker_map =  pd.read_csv('https://github.com/degerhan/dsignals/blob/a8b8f7d7f60ccbe7ffd3cf48b591ef45897a0012/db/eodhd-map.csv')
+        ticker_map = ticker_map[ticker_map.data_provider != 'eodhd']
+        ticker_map = ticker_map.dropna(subset=['eodhd'])
         ticker_map['yahoo']=ticker_map['signals_ticker']
-        ticker_map = ticker_map[ticker_map.data_provider != 'yahoo']
-        ticker_map = ticker_map.dropna(subset=['yahoo'])
-        ticker_map =ticker_map.drop_duplicates(subset=['yahoo'])
-        logger.info(f'Number of eligible tickers: {ticker_map.shape[0]}')
-
-        if ticker_map['yahoo'].duplicated().any():
-            num = ticker_map["yahoo"].duplicated().values.sum()
-            raise Exception(f'Found duplicated {num} yahoo tickers')
-
-        if ticker_map['bloomberg_ticker'].duplicated().any():
-            num = ticker_map["bloomberg_ticker"].duplicated().values.sum()
-            raise Exception(f'Found duplicated {num} bloomberg_ticker tickers')
-
-        return ticker_map
+        return Provider.get_tickers(ticker_map)
     
     def download_ticker(self, ticker: str, start: dt.datetime, end: dt.datetime) -> Tuple[str, pd.DataFrame]:
         """dowload data for a given ticker"""

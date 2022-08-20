@@ -25,8 +25,7 @@ class Provider(ABC):
     """Common base class for (daily) stock price data"""
    
     @staticmethod
-    def get_tickers() -> pd.DataFrame:
-        ticker_map = pd.read_csv(SIGNALS_TICKER_MAP)
+    def get_tickers(ticker_map: pd.DataFrame) -> pd.DataFrame:
         ticker_map = ticker_map.dropna(subset=['yahoo'])
         logger.info(f'Number of eligible tickers: {ticker_map.shape[0]}')
 
