@@ -13,11 +13,15 @@ from opensignals import utils
 
 class Yahoo(Provider):
     """Implementation of a stock data price provider that uses the Yahoo! Finance API"""
-    
-    @staticmethod
-    def get_tickers() -> pd.DataFrame:
-        ticker_map = pd.read_csv(SIGNALS_TICKER_MAP)
-        return Provider.get_tickers(ticker_map)
+    def __init(self, ticker_map: pd.DataFrame):
+         if ticker_map:
+            self.ticker_map =ticker_map
+         else:
+            self.ticker_map = pd.read_csv(SIGNALS_TICKER_MAP)
+
+
+    def get_tickers(self) -> pd.DataFrame:
+        return Provider.get_tickers(self.ticker_map)
 
     def download_ticker(self, ticker: str, start: dt.datetime, end: dt.datetime) -> Tuple[str, pd.DataFrame]:
         """dowload data for a given ticker"""

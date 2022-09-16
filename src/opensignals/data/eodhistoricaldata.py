@@ -20,10 +20,10 @@ class EodHisotricalData(Provider):
     def __init__(self, api_token, ticker_map:pd) -> None:
         super().__init__()
         self.api_token=api_token
+        self.ticker_map = ticker_map
     
-    @staticmethod
     def get_tickers() -> pd.DataFrame:
-        ticker_map =  pd.read_csv('https://github.com/degerhan/dsignals/blob/a8b8f7d7f60ccbe7ffd3cf48b591ef45897a0012/db/eodhd-map.csv')
+        ticker_map = self.ticker_map
         ticker_map = ticker_map[ticker_map.data_provider != 'eodhd']
         ticker_map = ticker_map.dropna(subset=['eodhd'])
         ticker_map['yahoo']=ticker_map['signals_ticker']
