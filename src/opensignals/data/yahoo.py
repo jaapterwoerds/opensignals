@@ -7,7 +7,7 @@ from typing import Tuple, Dict, Union
 import numpy as np
 import pandas as pd
 import requests
-from opensignals.data.provider import Provider
+from opensignals.data.provider import Provider, SIGNALS_TICKER_MAP  
 from opensignals import utils
 
 
