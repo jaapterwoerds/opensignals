@@ -22,7 +22,7 @@ class EodHisotricalData(Provider):
         self.api_token=api_token
         self.ticker_map = ticker_map
     
-    def get_tickers() -> pd.DataFrame:
+    def get_tickers(self) -> pd.DataFrame:
         ticker_map = self.ticker_map
         ticker_map = ticker_map[ticker_map.data_provider != 'eodhd']
         ticker_map = ticker_map.dropna(subset=['eodhd'])
