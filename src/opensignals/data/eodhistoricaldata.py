@@ -25,7 +25,6 @@ class EodHisotricalData(Provider):
     def get_tickers(self) -> pd.DataFrame:
         ticker_map = self.ticker_map
         ticker_map = ticker_map[ticker_map.data_provider != 'eodhd']
-        ticker_map = ticker_map.dropna(subset=['eodhd'])
         ticker_map['yahoo']=ticker_map['signals_ticker']
         return Provider.get_tickers(ticker_map)
     
