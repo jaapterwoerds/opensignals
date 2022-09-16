@@ -20,8 +20,8 @@
             pyarrow>=6.0.1
             requests>=2.25.1
             tqdm>=4.61.2
-            ipython
         '';
+         packagesExtra =builtins.readFile ./requirements-dev.txt;
       });
     };
 }
