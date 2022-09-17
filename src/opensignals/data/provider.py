@@ -32,7 +32,7 @@ class Provider(ABC):
             raise Exception(f'Found duplicated {num} {tickers.name} tickers')
     
     def get_tickers(self) -> pd.DataFrame:
-        return Provider.validate_ticker_map(ticker_map=self.ticker_map)
+        return Provider.validate_ticker_map(ticker_map=self.ticker_map, provider_ticker_column=self.provider_ticker_column)
 
     @staticmethod
     def validate_ticker_map(ticker_map: pd.DataFrame, provider_ticker_column: str) -> pd.DataFrame:
