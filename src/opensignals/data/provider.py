@@ -31,9 +31,12 @@ class Provider(ABC):
             num = tickers.duplicated().values.sum()
             raise Exception(f'Found duplicated {num} {tickers.name} tickers')
     
+    def get_tickers(self) -> pd.DataFrame:
+        return Provider.validate_ticker_map(ticker_map=self.ticker_map)
+
     @staticmethod
     def validate_ticker_map(ticker_map: pd.DataFrame, provider_ticker_column: str) -> pd.DataFrame:
-        ticker_map = ticker_map.dropna(subset=[self.provider_ticker_column])
+        ticker_map = ticker_map.dropna(subset=[provider_ticker_column])
         logger.info(f'Number of eligible tickers: {ticker_map.shape[0]}')
 
         Provider._check_duplicates(ticker_map[provider_ticker_column])

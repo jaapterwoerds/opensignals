@@ -23,9 +23,6 @@ class EodHisotricalData(Provider):
         self.ticker_map = ticker_map
         self.provider_ticker_column ='eodhd'
     
-    def get_tickers(self) -> pd.DataFrame:
-        return Provider.validate_ticker_map(ticker_map=self.ticker_map, provider_ticker_column=self.provider_ticker_column)
-    
     def download_ticker(self, ticker: str, start: dt.datetime, end: dt.datetime) -> Tuple[str, pd.DataFrame]:
         """dowload data for a given ticker"""
 
