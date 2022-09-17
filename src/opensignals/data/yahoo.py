@@ -21,7 +21,7 @@ class Yahoo(Provider):
 
 
     def get_tickers(self) -> pd.DataFrame:
-        return Provider.get_tickers(self.ticker_map)
+        return Provider.va(self.ticker_map)
 
     def download_ticker(self, ticker: str, start: dt.datetime, end: dt.datetime) -> Tuple[str, pd.DataFrame]:
         """dowload data for a given ticker"""

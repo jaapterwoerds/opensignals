@@ -23,19 +23,21 @@ SIGNALS_TARGETS = f'{AWS_BASE_URL}/signals_train_val_bbg.csv'
 
 class Provider(ABC):
     """Common base class for (daily) stock price data"""
-   
+    provider_ticker_column: str
+    
     @staticmethod
-    def get_tickers(ticker_map: pd.DataFrame) -> pd.DataFrame:
-        ticker_map = ticker_map.dropna(subset=['yahoo'])
+    def _validate_no_duplicate_tickers(tickers: pd.Series):
+        if tickers.duplicated().any():
+            num = tickers.duplicated().values.sum()
+            raise Exception(f'Found duplicated {num} {tickers.name} tickers')
+    
+    @staticmethod
+    def validate_ticker_map(ticker_map: pd.DataFrame, provider_ticker_column: str) -> pd.DataFrame:
+        ticker_map = ticker_map.dropna(subset=[self.provider_ticker_column])
         logger.info(f'Number of eligible tickers: {ticker_map.shape[0]}')
 
-        if ticker_map['yahoo'].duplicated().any():
-            num = ticker_map["yahoo"].duplicated().values.sum()
-            raise Exception(f'Found duplicated {num} yahoo tickers')
-
-        if ticker_map['bloomberg_ticker'].duplicated().any():
-            num = ticker_map["bloomberg_ticker"].duplicated().values.sum()
-            raise Exception(f'Found duplicated {num} bloomberg_ticker tickers')
+        _check_duplicates(ticker_map[provider_ticker_column])
+        _check_duplicates(ticker_map['bloomberg_ticker'])
 
         return ticker_map
 
@@ -56,6 +58,7 @@ class Provider(ABC):
     @staticmethod
     def get_ticker_missing(ticker_data: pd.DataFrame,
                            ticker_map: pd.DataFrame,
+                           provider_ticker_column:str,
                            last_friday: Optional[dt.datetime] = None) -> pd.DataFrame:
         if last_friday is None:
             last_friday = dt.datetime.today() - relativedelta(weekday=FR(-1))
@@ -69,7 +72,7 @@ class Provider(ABC):
         )
 
         ticker_not_found = eligible_tickers_available_data.loc[
-            eligible_tickers_available_data.date_max.isna(), ['bloomberg_ticker', 'yahoo']
+            eligible_tickers_available_data.date_max.isna(), ['bloomberg_ticker', provider_ticker_column]
         ]
 
         ticker_not_found['start'] = '2002-12-01'
@@ -80,7 +83,7 @@ class Provider(ABC):
                     (eligible_tickers_available_data.date_max < last_friday.strftime('%Y-%m-%d')) &
                     (eligible_tickers_available_data.date_max > last_friday_52.strftime('%Y-%m-%d'))
             ),
-            ['bloomberg_ticker', 'yahoo', 'date_max']
+            ['bloomberg_ticker', provider_ticker_column, 'date_max']
         ]
 
         tickers_outdated['start'] = (
@@ -216,7 +219,7 @@ class Provider(ABC):
         logger.info(f'Downloading missing data for {n_ticker_missing} tickers')
 
         ticker_missing_grouped = ticker_missing.groupby('start').apply(
-            lambda x: ' '.join(x.yahoo.astype(str))
+            lambda x: ' '.join(x[self.provider_ticker_column].astype(str))
         )
         concat_dfs = []
         for start, tickers in ticker_missing_grouped.iteritems():
@@ -232,7 +235,7 @@ class Provider(ABC):
             temp_df['created_at'] = dt.datetime.now()
             temp_df['volume'] = temp_df['volume'].astype('float64')
             temp_df['bloomberg_ticker'] = temp_df['bloomberg_ticker'].map(
-                dict(zip(ticker_map['yahoo'], ticker_map['bloomberg_ticker'])))
+                dict(zip(ticker_map[self.provider_ticker_column], ticker_map['bloomberg_ticker'])))
 
             concat_dfs.append(temp_df)
 

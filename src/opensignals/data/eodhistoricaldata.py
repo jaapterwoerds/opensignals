@@ -21,12 +21,12 @@ class EodHisotricalData(Provider):
         super().__init__()
         self.api_token=api_token
         self.ticker_map = ticker_map
+        self.provider_ticker_column ='eodhd'
     
     def get_tickers(self) -> pd.DataFrame:
         ticker_map = self.ticker_map
         ticker_map = ticker_map[ticker_map.data_provider != 'eodhd']
-        ticker_map['yahoo']=ticker_map['signals_ticker']
-        return Provider.get_tickers(ticker_map)
+        return Provider.validate_ticker_map(ticker_map)
     
     def download_ticker(self, ticker: str, start: dt.datetime, end: dt.datetime) -> Tuple[str, pd.DataFrame]:
         """dowload data for a given ticker"""
