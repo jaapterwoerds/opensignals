@@ -1,2 +1,2 @@
-pandas-stubs~=1.2.0.39
+pandas-stubs>=1.2.0.39
 mypy
