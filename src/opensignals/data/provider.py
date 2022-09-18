@@ -212,7 +212,7 @@ class Provider(ABC):
 
         ticker_data = self.get_ticker_data(db_dir)
         ticker_map = self.get_tickers()
-        ticker_missing = self.get_ticker_missing(ticker_data, ticker_map)
+        ticker_missing = self.get_ticker_missing(ticker_data, ticker_map, self.provider_ticker_column)
 
         n_ticker_missing = ticker_missing.shape[0]
         if n_ticker_missing <= 0:
