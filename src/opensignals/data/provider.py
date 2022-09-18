@@ -39,8 +39,8 @@ class Provider(ABC):
         ticker_map = ticker_map.dropna(subset=[provider_ticker_column])
         logger.info(f'Number of eligible tickers: {ticker_map.shape[0]}')
 
-        Provider._check_duplicates(ticker_map[provider_ticker_column])
-        Provider._check_duplicates(ticker_map['bloomberg_ticker'])
+        Provider._validate_no_duplicate_tickers(ticker_map[provider_ticker_column])
+        Provider._validate_no_duplicate_tickers(ticker_map['bloomberg_ticker'])
 
         return ticker_map
 
