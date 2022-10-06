@@ -63,7 +63,7 @@ class EodHisotricalData(Provider):
                         'volume': np.float32,
                         'adjusted_close': np.float32
                     },orient='records')
-                    quotes = quotes.rename({'adjusted_close': 'adj_close'})
+                    quotes = quotes.rename(columns={'adjusted_close': 'adj_close'})
                     quotes['provider']= 'eodhistoricaldata'
                     quotes['currency'] = 'unknown'
                     quotes['bloomberg_ticker'] = ticker

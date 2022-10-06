@@ -158,9 +158,9 @@ class Provider(ABC):
 
         ticker_data = self.get_ticker_data(db_dir)
 
-        ticker_universe = pd.read_csv(SIGNALS_UNIVERSE)
-        ticker_data = ticker_data[ticker_data.bloomberg_ticker.isin(
-            ticker_universe['bloomberg_ticker'])]
+        # ticker_universe = pd.read_csv(SIGNALS_UNIVERSE)
+        # ticker_data = ticker_data[ticker_data.bloomberg_ticker.isin(
+        #     ticker_universe['bloomberg_ticker'])]
 
         targets = pd.read_csv(SIGNALS_TARGETS)
         targets['date'] = pd.to_datetime(
