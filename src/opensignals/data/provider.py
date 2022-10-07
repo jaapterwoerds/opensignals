@@ -23,7 +23,8 @@ SIGNALS_TARGETS = f'{AWS_BASE_URL}/signals_train_val_bbg.csv'
 
 class Provider(ABC):
     """Common base class for (daily) stock price data"""
-    provider_ticker_column: str
+    def __init__(self, provider_ticker_column: str):
+        self.provider_ticker_column = provider_ticker_column
     
     @staticmethod
     def _validate_no_duplicate_tickers(tickers: pd.Series):

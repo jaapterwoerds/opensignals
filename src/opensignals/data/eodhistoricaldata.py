@@ -18,10 +18,9 @@ logger.setLevel(level=logging.DEBUG)
 class EodHisotricalData(Provider):
     """Implementation of a stock data price provider that uses the eodhistoricaldata.com API  https://eodhistoricaldata.com/financial-apis/ """
     def __init__(self, api_token, ticker_map:pd) -> None:
-        super().__init__()
+        super().__init__(provider_ticker_column ='eodhd')
         self.api_token=api_token
         self.ticker_map = ticker_map
-        self.provider_ticker_column ='eodhd'
     
     def download_ticker(self, ticker: str, start: dt.datetime, end: dt.datetime) -> Tuple[str, pd.DataFrame]:
         """dowload data for a given ticker"""
