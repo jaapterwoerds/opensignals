@@ -14,7 +14,7 @@ from opensignals import utils
 class Yahoo(Provider):
     """Implementation of a stock data price provider that uses the Yahoo! Finance API"""
     def __init__(self, ticker_map: pd.DataFrame=None):
-         super.__init__
+         super().__init__(provider_ticker_column='yahoo')
          if ticker_map:
             self.ticker_map =ticker_map
          else:
