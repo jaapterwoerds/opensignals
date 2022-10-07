@@ -70,4 +70,4 @@ class EodHisotricalData(Provider):
                 _time.sleep(backoff)
                 backoff = min(backoff * 2, 30)
                
-        return ticker, empty_df()
+        return ticker, self.empty_df()
