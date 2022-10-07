@@ -188,7 +188,7 @@ class Provider(ABC):
         start_date = dt.datetime.strptime(start, '%Y-%m-%d')
         end_date = dt.datetime.combine(dt.date.today(), dt.time())
 
-        dfs = {'empty': self.empty_df()}
+        dfs = []
         with futures.ThreadPoolExecutor() as executor:
             _futures = []
             with tqdm(total=len(tickers), unit='tickers') as pbar:
@@ -200,7 +200,7 @@ class Provider(ABC):
                 for future in futures.as_completed(_futures):
                     pbar.update(1)
                     ticker, data = future.result()
-                    dfs[ticker] = data
+                    dfs.append(data)
 
         pbar.close()
 
