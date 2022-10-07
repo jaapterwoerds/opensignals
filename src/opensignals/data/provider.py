@@ -259,7 +259,9 @@ class Provider(ABC):
         logger.info(f'Storing data for {n_ticker_data} tickers')
         df.to_parquet(db_dir / f'{dt.datetime.utcnow().timestamp()}.parquet', index=False)
         return
-
+    
+    
+    @staticmethod
     def empty_df() -> pd.DataFrame:
             return pd.DataFrame(dtype={
                         'date': np.datetime64,
