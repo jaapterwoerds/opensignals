@@ -25,13 +25,9 @@ class EodHisotricalData(Provider):
     def download_ticker(self, ticker: str, start: dt.datetime, end: dt.datetime) -> Tuple[str, pd.DataFrame]:
         """dowload data for a given ticker"""
 
-        def empty_df() -> pd.DataFrame:
-            return pd.DataFrame(columns=[
-                "date", "bloomberg_ticker",
-                "open", "high", "low", "close",
-                "adj_close", "volume", "currency", "provider"])
+                    
 
-        retries = 2
+        retries = 5
         tries = retries + 1
         backoff = 1
         url = f"https://eodhistoricaldata.com/api/eod/{ticker}"

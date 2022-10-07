@@ -202,7 +202,10 @@ class Provider(ABC):
 
         pbar.close()
 
-        return pd.concat(dfs)
+        df = self.empty_df()
+        if len(dfs) > 0: 
+            df = pd.concat(dfs)
+        return df
 
     def download_data(self, db_dir: pathlib.Path, recreate: bool = False) -> None:
         if recreate:
@@ -257,6 +260,20 @@ class Provider(ABC):
         df.to_parquet(db_dir / f'{dt.datetime.utcnow().timestamp()}.parquet', index=False)
         return
 
+    def empty_df() -> pd.DataFrame:
+            return pd.DataFrame(dtype={
+                        'date': np.datetime64,
+                        'bloomberg_ticker': str,
+                        'open': np.float32,
+                        'close': np.float32,
+                        'high': np.float32,
+                        'low': np.float32,
+                        'volume': np.float32,
+                        'adj_close': np.float32,
+                        'volume':np.float32,
+                        'currency':np.float32,
+                        'provider':np.float32
+                        })    
     @abstractmethod
     def download_ticker(self, ticker: str, start: dt.datetime, end: dt.datetime) -> Tuple[str, pd.DataFrame]:
         pass
