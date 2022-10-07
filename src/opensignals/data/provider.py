@@ -8,6 +8,8 @@ from typing import Optional, List, Tuple
 
 from dateutil.relativedelta import relativedelta, FR
 import pandas as pd
+
+import numpy as np
 from tqdm import tqdm
 
 from opensignals import features
