@@ -188,7 +188,7 @@ class Provider(ABC):
         start_date = dt.datetime.strptime(start, '%Y-%m-%d')
         end_date = dt.datetime.combine(dt.date.today(), dt.time())
 
-        dfs = {}
+        dfs = {'empty': self.empty_df()}
         with futures.ThreadPoolExecutor() as executor:
             _futures = []
             with tqdm(total=len(tickers), unit='tickers') as pbar:
@@ -204,10 +204,8 @@ class Provider(ABC):
 
         pbar.close()
 
-        df = self.empty_df()
-        if len(dfs) > 0: 
-            df = pd.concat(dfs)
-        return df
+        return pd.concat(dfs)
+
 
     def download_data(self, db_dir: pathlib.Path, recreate: bool = False) -> None:
         if recreate:
