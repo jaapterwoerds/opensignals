@@ -46,7 +46,7 @@ class Yahoo(Provider):
                 data_json = data.json()
                 quotes = data_json["chart"]["result"][0]
                 if "timestamp" not in quotes:
-                    return ticker, empty_df()
+                    return ticker, self.empty_df()
 
                 timestamps = quotes["timestamp"]
                 ohlc = quotes["indicators"]["quote"][0]

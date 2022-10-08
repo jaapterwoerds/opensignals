@@ -264,17 +264,17 @@ class Provider(ABC):
     @staticmethod
     def empty_df() -> pd.DataFrame:
             return pd.DataFrame(dtype={
-                        'date': np.datetime64,
-                        'bloomberg_ticker': str,
-                        'open': np.float32,
-                        'close': np.float32,
-                        'high': np.float32,
-                        'low': np.float32,
-                        'volume': np.float32,
-                        'adj_close': np.float32,
-                        'volume':np.float32,
-                        'currency':np.float32,
-                        'provider':np.float32
+                        'date': pd.Series(dtype=np.datetime64),
+                        'bloomberg_ticker': pd.Series(dtype=str),
+                        'open': pd.Series(dtype=np.float32),
+                        'close':  pd.Series(dtype=np.float32),
+                        'high': pd.Series(dtype=np.float32),
+                        'low':  pd.Series(dtype=np.float32),
+                        'volume':  pd.Series(dtype=np.float32),
+                        'adj_close':  pd.Series(dtype=np.float32),
+                        'volume': pd.Series(dtype=np.float32),
+                        'currency': pd.Series(dtype=np.float32),
+                        'provider': pd.Series(dtype=np.float32),
                         })    
     @abstractmethod
     def download_ticker(self, ticker: str, start: dt.datetime, end: dt.datetime) -> Tuple[str, pd.DataFrame]:
