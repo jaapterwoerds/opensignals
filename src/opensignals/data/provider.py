@@ -259,11 +259,11 @@ class Provider(ABC):
         logger.info(f'Storing data for {n_ticker_data} tickers')
         df.to_parquet(db_dir / f'{dt.datetime.utcnow().timestamp()}.parquet', index=False)
         return
-    
-    
+
+
     @staticmethod
     def empty_df() -> pd.DataFrame:
-            return pd.DataFrame(dtype={
+            return pd.DataFrame({
                         'date': pd.Series(dtype='datetime64[ns]'),
                         'bloomberg_ticker': pd.Series(dtype=str),
                         'open': pd.Series(dtype=np.float32),
