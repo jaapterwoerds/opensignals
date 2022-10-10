@@ -188,7 +188,7 @@ class Provider(ABC):
         start_date = dt.datetime.strptime(start, '%Y-%m-%d')
         end_date = dt.datetime.combine(dt.date.today(), dt.time())
 
-        dfs = []
+        dfs = [self.empty_df()]
         with futures.ThreadPoolExecutor() as executor:
             _futures = []
             with tqdm(total=len(tickers), unit='tickers') as pbar:
@@ -198,11 +198,9 @@ class Provider(ABC):
                     )
 
                 for future in futures.as_completed(_futures):
-                    pbar.update(1)
                     ticker, data = future.result()
+                    pbar.update(1)
                     dfs.append(data)
-
-        pbar.close()
 
         return pd.concat(dfs)
 
@@ -262,7 +260,7 @@ class Provider(ABC):
 
 
     @staticmethod
-    def empty_df() -> pd.DataFrame:
+    def empty_sdf() -> pd.DataFrame:
             return pd.DataFrame({
                         'date': pd.Series(dtype='datetime64[ns]'),
                         'bloomberg_ticker': pd.Series(dtype=str),
