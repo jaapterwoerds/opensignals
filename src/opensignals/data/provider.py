@@ -259,8 +259,7 @@ class Provider(ABC):
         return
 
 
-    @staticmethod
-    def empty_df() -> pd.DataFrame:
+    def empty_df(self) -> pd.DataFrame:
             return pd.DataFrame({
                         'date': pd.Series(dtype='datetime64[ns]'),
                         'bloomberg_ticker': pd.Series(dtype=str),
@@ -273,7 +272,8 @@ class Provider(ABC):
                         'volume': pd.Series(dtype=np.float32),
                         'currency': pd.Series(dtype=np.float32),
                         'provider': pd.Series(dtype=np.float32),
-                        })    
+                        })
+
     @abstractmethod
     def download_ticker(self, ticker: str, start: dt.datetime, end: dt.datetime) -> Tuple[str, pd.DataFrame]:
         pass
