@@ -260,7 +260,7 @@ class Provider(ABC):
 
 
     @staticmethod
-    def empty_sdf() -> pd.DataFrame:
+    def empty_df() -> pd.DataFrame:
             return pd.DataFrame({
                         'date': pd.Series(dtype='datetime64[ns]'),
                         'bloomberg_ticker': pd.Series(dtype=str),
