@@ -18,8 +18,11 @@
       {
         packages = {
           myapp = mkPoetryApplication {
-             projectDir = self ;
-             src=./src;
+                lockFile = ./poetry.lock;
+            pyproject = ./pyproject.toml;
+            projectDir = ./.;
+
+
              python=pkgs.python311;
           };
           default = self.packages.${system}.myapp;
