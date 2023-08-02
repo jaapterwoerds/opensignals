@@ -47,14 +47,13 @@ def main(argv: Optional[List[str]] = None) -> None:
         logging.basicConfig(level=logging.INFO)
 
     if args['download']:
-       data_provider =  args['--provider']
-    if  data_provider == 'yahoo':
-        provider = Yahoo()
-    else if  data_provider == 'eodhd':
-        ticker_map = pd.read_parquet('eodhd-map.parquet')
-        provider = EodHisotricalData(api_token=env['EODHD_API_TKEN'], ticker_map)
-    provider.download_data(Path(args['--dir']), args['--recreate'])
+        data_provider =  args['--provider']
+        if  data_provider == 'yahoo':
+            provider = Yahoo()
+        elif data_provider == 'eodhd':
+            ticker_map = pd.read_parquet('eodhd-map.parquet')
+            provider = EodHisotricalData(api_token=args['--eodhd_api_key'], ticker_map=ticker_map)
+        provider.download_data(Path(args['--dir']), args['--recreate'] )
 
 
-if __name__ == '__main__':
-    main()
+
