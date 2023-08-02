@@ -11,10 +11,11 @@ import numpy as np
 import pandas as pd
 import requests
 from opensignals.data.provider import Provider
-from opensignals import utils
 
 logger = logging.getLogger(__name__)
 logger.setLevel(level=logging.DEBUG)
+
+
 class EodHisotricalData(Provider):
     """Implementation of a stock data price provider that uses the eodhistoricaldata.com API  https://eodhistoricaldata.com/financial-apis/ """
     def __init__(self, api_token, ticker_map:pd) -> None:
@@ -24,9 +25,6 @@ class EodHisotricalData(Provider):
     
     def download_ticker(self, ticker: str, start: dt.datetime, end: dt.datetime) -> Tuple[str, pd.DataFrame]:
         """dowload data for a given ticker"""
-
-                    
-
         retries = 5
         tries = retries + 1
         backoff = 1
@@ -57,7 +55,7 @@ class EodHisotricalData(Provider):
                         'low': np.float32,
                         'volume': np.float32,
                         'adjusted_close': np.float32
-                    },orient='records')
+                    }, orient='records')
                     quotes = quotes.rename(columns={'adjusted_close': 'adj_close'})
                     quotes['provider']= 'eodhistoricaldata'
                     quotes['currency'] = 'unknown'

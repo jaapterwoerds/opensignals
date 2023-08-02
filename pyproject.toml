@@ -1,6 +1,24 @@
+[tool.poetry]
+name = "opensignals"
+version = "0.4.1"
+description = "0.0.6"
+authors = ["Jaap ter Woerds <jaap@lambdalab.nl>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+docopt = ">=0.6.2"
+pandas = ">=1.2.2,<2"
+numpy = ">=1.21.4"
+pyarrow = ">=6.0.1"
+requests = ">=2.25.1"
+tqdm = ">=4.61.2"
+
+[tool.poetry.group.dev.dependencies]
+pandas-stubs = ">=1.2.0.39"
+mypy = "^1.2.0"
+[tool.poetry.scripts]
+poetry = "poetry.console.application:opensignals/__main__.py"
 [build-system]
-requires = [
-    'setuptools>=42',
-    'wheel'
-]
-build-backend = 'setuptools.build_meta'
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
