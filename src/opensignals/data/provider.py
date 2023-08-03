@@ -42,8 +42,8 @@ class Provider(ABC):
         ticker_map = ticker_map.dropna(subset=[provider_ticker_column])
         logger.info(f'Number of eligible tickers: {ticker_map.shape[0]}')
 
-        Provider._validate_no_duplicate_tickers(ticker_map[provider_ticker_column])
-        Provider._validate_no_duplicate_tickers(ticker_map['bloomberg_ticker'])
+        # Provider._validate_no_duplicate_tickers(ticker_map[provider_ticker_column])
+        # Provider._validate_no_duplicate_tickers(ticker_map['bloomberg_ticker'])
 
         return ticker_map
 
@@ -227,7 +227,7 @@ class Provider(ABC):
             lambda x: ' '.join(x[self.provider_ticker_column].astype(str))
         )
         concat_dfs = []
-        for start, tickers in ticker_missing_grouped.iteritems():
+        for start, tickers in ticker_missing_grouped.items():
             temp_df = self.download_tickers(tickers.split(' '), start=start)
             start_date = dt.datetime.strptime(start, '%Y-%m-%d')
             

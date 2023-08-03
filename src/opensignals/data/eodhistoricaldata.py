@@ -19,7 +19,7 @@ logger.setLevel(level=logging.DEBUG)
 class EodHisotricalData(Provider):
     """Implementation of a stock data price provider that uses the eodhistoricaldata.com API  https://eodhistoricaldata.com/financial-apis/ """
     def __init__(self, api_token, ticker_map:pd) -> None:
-        super().__init__(provider_ticker_column ='eodhd')
+        super().__init__(provider_ticker_column ='signals_ticker')
         self.api_token=api_token
         self.ticker_map = ticker_map
     
@@ -48,7 +48,7 @@ class EodHisotricalData(Provider):
                     break
                 else:
                     quotes = pd.read_json(data.content.decode('utf-8'),dtype={
-                        'date': np.datetime64,
+                        'date': 'pd.datetime64[ns]',
                         'open': np.float32,
                         'close': np.float32,
                         'high': np.float32,
@@ -56,6 +56,7 @@ class EodHisotricalData(Provider):
                         'volume': np.float32,
                         'adjusted_close': np.float32
                     }, orient='records')
+                    quotes['date']=pd.to_datetime(quotes['date'], unit='d')
                     quotes = quotes.rename(columns={'adjusted_close': 'adj_close'})
                     quotes['provider']= 'eodhistoricaldata'
                     quotes['currency'] = 'unknown'

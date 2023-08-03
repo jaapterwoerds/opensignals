@@ -14,10 +14,7 @@
         # see https://github.com/nix-community/poetry2nix/tree/master#api for more functions and examples.
         inherit (poetry2nix.legacyPackages.${system}) mkPoetryApplication;
         pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        packages = {
-          myapp = mkPoetryApplication {
+        app = mkPoetryApplication {
                 lockFile = ./poetry.lock;
             pyproject = ./pyproject.toml;
             projectDir = ./.;
@@ -25,11 +22,19 @@
 
              python=pkgs.python311;
           };
+       
+      in
+      {
+        packages = {
+          myapp =app;
           default = self.packages.${system}.myapp;
         };
 
-        devShells.default = pkgs.mkShell {
-          packages = [ poetry2nix.packages.${system}.poetry ];
+        devShells={
+          default = app.dependencyEnv.env;
+          poetry=pkgs.mkShell {
+            packages = [ poetry2nix.packages.${system}.poetry ];
+          };
         };
       });
 }

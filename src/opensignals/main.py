@@ -5,7 +5,7 @@ Usage:
   opensignals [-v...]
   opensignals -h | --help
   opensignals --version
-  opensignals [options] download --dir=<dir> [--recreate]
+  opensignals [options] download  --provider=<provider> [--api_key=<api_key>] --dir=<dir> [--recreate]
 
 Options:
   -h --help         Show this screen.
@@ -20,14 +20,16 @@ Commands:
 import logging
 from pathlib import Path
 from typing import List, Optional
-
+import pandas as pd
 from docopt import docopt
 
 from opensignals import __version__
+from opensignals.data.eodhistoricaldata import EodHisotricalData
 from opensignals.data.yahoo import Yahoo
 
 
-def main(argv: Optional[List[str]] = None) -> None:
+#def main(argv: Optional[List[str]] = None) -> None:
+def main():
     """Main entry point.
 
     Args:
@@ -52,7 +54,7 @@ def main(argv: Optional[List[str]] = None) -> None:
             provider = Yahoo()
         elif data_provider == 'eodhd':
             ticker_map = pd.read_parquet('eodhd-map.parquet')
-            provider = EodHisotricalData(api_token=args['--eodhd_api_key'], ticker_map=ticker_map)
+            provider = EodHisotricalData(api_token=args['--api_key'], ticker_map=ticker_map)
         provider.download_data(Path(args['--dir']), args['--recreate'] )
 
 
